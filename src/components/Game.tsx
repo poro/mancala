@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Board from "./Board";
 import TutorialModal from "./TutorialModal"; // Import the new modal component
+import Image from "next/image"; // Import Image for Leo's avatar
 import {
   applyMove,
   chooseAIMove,
@@ -204,7 +205,7 @@ export default function Game() {
     }
     const p = state.currentPlayer === 0 ? 1 : 2;
     if (mode === "human-vs-ai" && state.currentPlayer === aiPlayer) {
-      return aiThinking ? `AI (P${p}) is thinking…` : `AI (P${p}) to move`;
+      return aiThinking ? `Leo is thinking…` : `Leo's turn`;
     }
     return `Player ${p}'s turn`;
   }, [state, mode, aiPlayer, aiThinking]);
@@ -270,14 +271,32 @@ export default function Game() {
 
       <div className="score-bar">
         <div className={`score ${state.currentPlayer === 1 ? "score-active" : ""}`}>
-          <span className="score-label">Player 2</span>
+          {mode === "human-vs-ai" && aiPlayer === 1 && (
+            <Image
+              src="/leo_avatar.jpg"
+              alt="Leo Avatar"
+              width={40}
+              height={40}
+              className="rounded-full mr-2 border-2 border-red-500"
+            />
+          )}
+          <span className="score-label">{mode === "human-vs-ai" && aiPlayer === 1 ? "Leo (P2)" : "Player 2"}</span>
           <span className="score-value">{p2Score}</span>
         </div>
         <div className="turn-banner" role="status" aria-live="polite">
           {turnLabel}
         </div>
         <div className={`score ${state.currentPlayer === 0 ? "score-active" : ""}`}>
-          <span className="score-label">Player 1</span>
+          {mode === "human-vs-ai" && aiPlayer === 0 && (
+            <Image
+              src="/leo_avatar.jpg"
+              alt="Leo Avatar"
+              width={40}
+              height={40}
+              className="rounded-full mr-2 border-2 border-red-500"
+            />
+          )}
+          <span className="score-label">{mode === "human-vs-ai" && aiPlayer === 0 ? "Leo (P1)" : "Player 1"}</span>
           <span className="score-value">{p1Score}</span>
         </div>
       </div>
