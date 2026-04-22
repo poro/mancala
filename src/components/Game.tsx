@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Board from "./Board";
+import TutorialModal from "./TutorialModal"; // Import the new modal component
 import {
   applyMove,
   chooseAIMove,
@@ -41,6 +42,7 @@ export default function Game() {
   const [flashPits, setFlashPits] = useState<Flash>(() => new Map());
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [aiThinking, setAiThinking] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(true); // State to control tutorial visibility
 
   const toastId = useRef(0);
   const busy = useRef(false);
@@ -192,6 +194,7 @@ export default function Game() {
     setAnimatingPit(null);
     setFlashPits(new Map());
     setToasts([]);
+    setShowTutorial(true); // Show tutorial on game reset
   }, []);
 
   const turnLabel = useMemo(() => {
@@ -259,6 +262,9 @@ export default function Game() {
           <button className="btn-reset" onClick={resetGame}>
             New game
           </button>
+          <button className="btn-info ml-2" onClick={() => setShowTutorial(true)}>
+            Show Tutorial
+          </button>
         </div>
       </header>
 
@@ -314,24 +320,7 @@ export default function Game() {
         </div>
       )}
 
-      <footer className="game-footer">
-        <details>
-          <summary>How to play</summary>
-          <ul>
-            <li>Pick a pit on your side; stones sow counter-clockwise.</li>
-            <li>Skip the opponent&apos;s store when sowing.</li>
-            <li>Last stone in your own store ⇒ free turn.</li>
-            <li>
-              Last stone in an empty pit on your side (opposite pit non-empty) ⇒
-              capture both into your store.
-            </li>
-            <li>
-              Game ends when a side is empty. Remaining stones sweep into each
-              player&apos;s store.
-            </li>
-          </ul>
-        </details>
-      </footer>
+      <TutorialModal isOpen={showTutorial} onClose={() => setShowTutorial(false)} />
     </div>
   );
 }
